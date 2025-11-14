@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMC Interativo - ConectaCRM (Solução p/ Varejo)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Warm Neutrals (bg-amber-50, text-stone-800, accent-emerald-600) -->
+    <!-- Application Structure Plan: SPA com 3 abas (Mercado, Operações, Financeiro) para agrupar os 9 blocos do BMC. Esta arquitetura foi escolhida para guiar o usuário por grupos temáticos (externo, interno, financeiro), facilitando a compreensão do modelo de negócios da "ConectaCRM" como uma solução para a "Sabor Artesanal". -->
+    <!-- Visualization & Content Choices: 1. Blocos do BMC (Texto/Lista) -> Goal: Informar -> Viz: Cartões HTML/Tailwind -> Justification: Legibilidade e organização dos 9 blocos do BMC. 2. Estrutura de Custos (Conceitual) -> Goal: Comparar -> Viz: Gráfico de Donut (Chart.js) -> Interaction: Hover -> Justification: Visualiza as categorias de custo da ConectaCRM. 3. Fontes de Receita (Conceitual) -> Goal: Comparar -> Viz: Gráfico de Donut (Chart.js) -> Interaction: Hover -> Justification: Visualiza como a ConectaCRM monetiza, incluindo setup (visto no "Projeto Conecta Sabor"). -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            border-bottom-width: 4px;
+            font-weight: 600;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            height: 300px; 
+            margin-left: auto;
+            margin-right: auto;
+        }
+        @media (min-width: 640px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-amber-50 text-stone-800 antialiased">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+        
+        <header class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-emerald-800 mb-2">Business Model Canvas Interativo</h1>
+            <p class="text-xl text-stone-700">ConectaCRM (Foco: Solução Varejo Gourmet)</p>
+            <p class="mt-4 max-w-3xl mx-auto text-stone-600">
+                Explore o Business Model Canvas do ConectaCRM, agora ajustado para focar em clientes do varejo gourmet como a "Sabor Artesanal Ltda". Veja como o ConectaCRM é desenhado para resolver problemas de descentralização e falta de follow-up.
+            </p>
+        </header>
+
+        <nav class="mb-8">
+            <div class="flex justify-center border-b border-stone-300">
+                <button id="btn-mercado" class="tab-button active text-emerald-700 border-emerald-600 py-3 px-6 text-lg" onclick="showTab('mercado')">
+                    Mercado (Externo)
+                </button>
+                <button id="btn-operacoes" class="tab-button text-stone-600 border-transparent py-3 px-6 text-lg" onclick="showTab('operacoes')">
+                    Operações (Interno)
+                </button>
+                <button id="btn-financeiro" class="tab-button text-stone-600 border-transparent py-3 px-6 text-lg" onclick="showTab('financeiro')">
+                    Financeiro (Base)
+                </button>
+            </div>
+        </nav>
+
+        <main>
+            <div id="tab-mercado" class="tab-content space-y-6">
+                <p class="text-center text-stone-600 mb-6 max-w-2xl mx-auto">Esta seção foca nos aspectos externos do negócio: quem são os clientes (como a Sabor Artesanal), o que oferecemos a eles e como nos conectamos.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 h-full">
+                        <h2 class="text-2xl font-semibold text-emerald-700 mb-4">1. Proposta de Valor</h2>
+                        <ul class="list-disc list-inside space-y-2 text-stone-700">
+                            <li>Centralização imediata de Vendas (Excel), Suporte (WhatsApp) e Marketing.</li>
+                            <li>Automação de follow-ups para vendedores (aumento de recompra).</li>
+                            <li>Visão 360º do cliente (fim da repetição de dados no atendimento).</li>
+                            <li>Segmentação de marketing baseada no histórico real de compras (e-commerce).</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 h-full">
+                        <h2 class="text-2xl font-semibold text-emerald-700 mb-4">2. Segmentos de Clientes</h2>
+                        <ul class="list-disc list-inside space-y-2 text-stone-700">
+                            <li>Foco: PMEs de Varejo Gourmet e Alimentos (ex: "Sabor Artesanal Ltda").</li>
+                            <li>Empresas em crescimento que usam planilhas e WhatsApp de forma descentralizada.</li>
+                            <li>Equipes de vendas (3-10 pessoas) que precisam de um funil claro.</li>
+                            <li>Gestores que precisam de relatórios unificados (Vendas + Suporte).</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 h-full">
+                        <h2 class="text-2xl font-semibold text-emerald-700 mb-4">3. Canais</h2>
+                        <ul class="list-disc list-inside space-y-2 text-stone-700">
+                            <li>Aplicação web e mobile (para vendedores).</li>
+                            <li>Consultoria de implementação (ex: "Projeto Conecta Sabor").</li>
+                            <li>Suporte via chat e e-mail (para o time da Sabor Artesanal).</li>
+                            <li>Webinars: "Como sair do Excel e unificar seu atendimento".</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 h-full">
+                        <h2 class="text-2xl font-semibold text-emerald-700 mb-4">4. Relacionamento com Clientes</h2>
+                        <ul class="list-disc list-inside space-y-2 text-stone-700">
+                            <li>Gerente de Sucesso dedicado na implementação (Onboarding).</li>
+                            <li>Base de conhecimento focada nos desafios do Varejo.</li>
+                            <li>Suporte técnico ágil para garantir a operação (WhatsApp API, E-commerce).</li>
+                            <li>Comunidade de usuários (gestores de varejo).</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="tab-operacoes" class="tab-content space-y-6 hidden">
+                <p class="text-center text-stone-600 mb-6 max-w-2xl mx-auto">Aqui detalhamos o funcionamento interno do ConectaCRM: as atividades e recursos necessários para entregar a Proposta de Valor para a Sabor Artesanal.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 h-full">
+                        <h2 class="text-2xl font-semibold text-emerald-700 mb-4">7. Atividades-Chave</h2>
+                        <ul class="list-disc list-inside space-y-2 text-stone-700">
+                            <li>Manutenção e melhoria contínua da plataforma SaaS.</li>
+                            <li>Garantir integrações robustas (E-commerce, WhatsApp).</li>
+                            <li>Processo de Onboarding e Treinamento de clientes (ex: "Projeto Conecta Sabor").</li>
+                            <li>Análise de dados de uso para sugerir melhorias aos clientes.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 h-full">
+                        <h2 class="text-2xl font-semibold text-emerald-700 mb-4">6. Recursos Principais</h2>
+                        <ul class="list-disc list-inside space-y-2 text-stone-700">
+                            <li>Plataforma CRM em nuvem (software).</li>
+                            <li>Equipe de engenharia (focada em integrações de varejo).</li>
+                            <li>Equipe de Sucesso do Cliente (Onboarding e Suporte).</li>
+                            <li>Infraestrutura de servidores (em conformidade com LGPD).</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 h-full">
+                        <h2 class="text-2xl font-semibold text-emerald-700 mb-4">8. Parcerias Principais</h2>
+                        <ul class="list-disc list-inside space-y-2 text-stone-700">
+                            <li>Provedores de hospedagem em nuvem (AWS, Azure).</li>
+                            <li>Plataformas de E-commerce (para integração de pedidos).</li>
+                            <li>Provedores de API do WhatsApp Business.</li>
+                            <li>Consultorias de implementação parceiras.</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="tab-financeiro" class="tab-content space-y-6 hidden">
+                <p class="text-center text-stone-600 mb-6 max-w-2xl mx-auto">A base do negócio. Veja como o ConectaCRM gera receita (ex: com o projeto da Sabor Artesanal) e quais são seus principais custos para operar.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                        <h2 class="text-2xl font-semibold text-red-700 mb-4 text-center">9. Estrutura de Custos</h2>
+                        <p class="text-center text-sm text-stone-500 mb-4">(Custos da empresa ConectaCRM)</p>
+                        <div class="chart-container">
+                            <canvas id="costsChart"></canvas>
+                        </div>
+                        <ul class="list-disc list-inside space-y-2 text-stone-700 mt-4">
+                            <li>Desenvolvimento e P&D (Plataforma e integrações).</li>
+                            <li>Custo de servidores e armazenamento (Nuvem).</li>
+                            <li>Marketing e Vendas (Aquisição de clientes como a Sabor Artesanal).</li>
+                            <li>Salários (Equipe de Suporte, Sucesso e Engenharia).</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                        <h2 class="text-2xl font-semibold text-green-700 mb-4 text-center">5. Fontes de Receita</h2>
+                        <p class="text-center text-sm text-stone-500 mb-4">(Receita da empresa ConectaCRM)</p>
+                        <div class="chart-container">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                         <ul class="list-disc list-inside space-y-2 text-stone-700 mt-4">
+                            <li>Licenças de software (SaaS por usuário/mês).</li>
+                            <li>Taxa de Setup/Implementação (ex: R$ 10.000 do "Projeto Conecta Sabor").</li>
+                            <li>Treinamentos adicionais pagos (ex: R$ 5.000).</li>
+                            <li>Módulos de integração premium (ex: API E-commerce).</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <script>
+        const allTabs = ['mercado', 'operacoes', 'financeiro'];
+        let costsChartInstance = null;
+        let revenueChartInstance = null;
+
+        function showTab(tabId) {
+            allTabs.forEach(id => {
+                document.getElementById(`tab-${id}`).classList.add('hidden');
+                document.getElementById(`btn-${id}`).classList.remove('active', 'text-emerald-700', 'border-emerald-600');
+                document.getElementById(`btn-${id}`).classList.add('text-stone-600', 'border-transparent');
+            });
+            
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            document.getElementById(`btn-${tabId}`).classList.add('active', 'text-emerald-700', 'border-emerald-600');
+            document.getElementById(`btn-${tabId}`).classList.remove('text-stone-600', 'border-transparent');
+
+            if (tabId === 'financeiro') {
+                renderCharts();
+            }
+        }
+
+        function renderCharts() {
+            if (!costsChartInstance) {
+                const ctxCosts = document.getElementById('costsChart').getContext('2d');
+                costsChartInstance = new Chart(ctxCosts, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Desenvolvimento', 'Servidores', 'Aquisição (Mkt/Vendas)', 'Suporte/Sucesso'],
+                        datasets: [{
+                            label: 'Estrutura de Custos',
+                            data: [35, 20, 25, 20],
+                            backgroundColor: [
+                                'rgb(220, 38, 38, 0.7)',
+                                'rgb(239, 68, 68, 0.7)',
+                                'rgb(248, 113, 113, 0.7)',
+                                'rgb(252, 165, 165, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgb(220, 38, 38)',
+                                'rgb(239, 68, 68)',
+                                'rgb(248, 113, 113)',
+                                'rgb(252, 165, 165)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed !== null) {
+                                            label += context.parsed + '% (Conceitual)';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            if (!revenueChartInstance) {
+                const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
+                revenueChartInstance = new Chart(ctxRevenue, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Licenças (SaaS)', 'Setup/Implementação', 'Treinamento Pago', 'Módulos Premium'],
+                        datasets: [{
+                            label: 'Fontes de Receita',
+                            data: [50, 25, 10, 15],
+                            backgroundColor: [
+                                'rgb(21, 128, 61, 0.7)',
+                                'rgb(22, 163, 74, 0.7)',
+                                'rgb(34, 197, 94, 0.7)',
+                                'rgb(77, 220, 128, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgb(21, 128, 61)',
+                                'rgb(22, 163, 74)',
+                                'rgb(34, 197, 94)',
+                                'rgb(77, 220, 128)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed !== null) {
+                                            label += context.parsed + '% (Conceitual)';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>
